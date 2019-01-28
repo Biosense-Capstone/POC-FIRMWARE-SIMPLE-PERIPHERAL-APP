@@ -237,27 +237,24 @@ Char sbpTaskStack[SBP_TASK_STACK_SIZE];
 static uint8_t scanRspData[] =
 {
   // complete name
-  0x14,   // length of this data
+  0x11,   // length of this data
   GAP_ADTYPE_LOCAL_NAME_COMPLETE,
-  'S',
-  'i',
-  'm',
-  'p',
-  'l',
-  'e',
   'B',
-  'L',
-  'E',
-  'P',
-  'e',
-  'r',
   'i',
-  'p',
-  'h',
+  'o',
+  'S',
   'e',
-  'r',
+  'n',
+  's',
+  'e',
+  'H',
+  'e',
   'a',
-  'l',
+  'd',
+  'b',
+  'a',
+  'n',
+  'd',
 
   // connection interval range
   0x05,   // length of this data
@@ -303,7 +300,7 @@ static uint8_t advertData[] =
 };
 
 // GAP GATT Attributes
-static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Simple BLE Peripheral";
+static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "BioSense Headband";
 
 // Globals used for ATT Response retransmission
 static gattMsgEvent_t *pAttRsp = NULL;
