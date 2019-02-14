@@ -93,11 +93,16 @@
 
 #if defined( USE_FPGA ) || defined( DEBUG_SW_TRACE )
 #include <driverlib/ioc.h>
-#endif // USE_FPGA | DEBUG_SW_TRACE
+#endif // USE_FPGA | DEBUG_SW_TRACE'
 
+#include "cos.h"
+extern const uint8_t cosVal[];
 /*********************************************************************
  * CONSTANTS
  */
+
+#define LO_UINT32(a) ((a) & 0xFFFF)
+#define HI_UINT32(a) (((a) >> 16) & 0xFF)
 
 // Advertising interval when device is discoverable (units of 625us, 160=100ms)
 #define DEFAULT_ADVERTISING_INTERVAL          160
@@ -237,24 +242,18 @@ Char sbpTaskStack[SBP_TASK_STACK_SIZE];
 static uint8_t scanRspData[] =
 {
   // complete name
-  0x11,   // length of this data
+  0x04,   // length of this data
   GAP_ADTYPE_LOCAL_NAME_COMPLETE,
   'B',
-  'i',
-  'o',
-  'S',
-  'e',
-  'n',
-  's',
-  'e',
   'H',
-  'e',
-  'a',
-  'd',
-  'b',
-  'a',
-  'n',
-  'd',
+  'B',
+
+  0x5,
+  GAP_ADTYPE_SERVICE_DATA,
+  0x0,
+  0x0,
+  0x0,
+  0x0,
 
   // connection interval range
   0x05,   // length of this data
@@ -595,10 +594,13 @@ static void SimpleBLEPeripheral_init(void)
  *
  * @return  None.
  */
+
 static void SimpleBLEPeripheral_taskFxn(UArg a0, UArg a1)
 {
   // Initialize application
   SimpleBLEPeripheral_init();
+  uint8_t index_var = 0;
+  // uint32_t * cosValInt = *(uint32_t **) & cosVal;
 
   // Application main loop
   for (;;)
@@ -691,6 +693,18 @@ static void SimpleBLEPeripheral_taskFxn(UArg a0, UArg a1)
       ICall_free(oadWriteEvt);
     }
 #endif //FEATURE_OAD
+
+    scanRspData[7] = cosVal[index_var];
+    ++index_var;
+    if(index_var >= 100){
+        index_var = 0;
+    }
+    if(GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData),
+                         scanRspData) != SUCCESS){
+        --index_var;
+    }
+
+
   }
 }
 
