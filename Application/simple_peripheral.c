@@ -605,6 +605,21 @@ static void SimpleBLEPeripheral_taskFxn(UArg a0, UArg a1)
   // Application main loop
   for (;;)
   {
+      if (events & SBP_PERIODIC_EVT){
+          events &= ~SBP_PERIODIC_EVT;
+          Util_startClock(&periodicClock);
+
+          scanRspData[7] = cosVal[index_var];
+          ++index_var;
+          if(index_var >= 100){
+              index_var = 0;
+          }
+          if(GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData),
+                               scanRspData) != SUCCESS){
+              --index_var;
+          }
+
+      }
     // Waits for a signal to the semaphore associated with the calling thread.
     // Note that the semaphore associated with a thread is signaled when a
     // message is queued to the message receive queue of the thread or when
@@ -694,15 +709,7 @@ static void SimpleBLEPeripheral_taskFxn(UArg a0, UArg a1)
     }
 #endif //FEATURE_OAD
 
-    scanRspData[7] = cosVal[index_var];
-    ++index_var;
-    if(index_var >= 100){
-        index_var = 0;
-    }
-    if(GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData),
-                         scanRspData) != SUCCESS){
-        --index_var;
-    }
+
 
 
   }
