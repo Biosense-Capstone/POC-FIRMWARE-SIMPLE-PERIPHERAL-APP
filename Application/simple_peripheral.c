@@ -144,7 +144,7 @@ extern const uint8_t cosVal[];
 #define DEFAULT_CONN_PAUSE_PERIPHERAL         6
 
 // How often to perform periodic event (in msec)
-#define SBP_PERIODIC_EVT_PERIOD               5000
+#define SBP_PERIODIC_EVT_PERIOD               100
 
 // Type of Display to open
 #if !defined(Display_DISABLE_ALL)
@@ -601,7 +601,7 @@ static void SimpleBLEPeripheral_taskFxn(UArg a0, UArg a1)
   SimpleBLEPeripheral_init();
   uint8_t index_var = 0;
   // uint32_t * cosValInt = *(uint32_t **) & cosVal;
-
+  Util_startClock(&periodicClock);
   // Application main loop
   for (;;)
   {
@@ -678,15 +678,15 @@ static void SimpleBLEPeripheral_taskFxn(UArg a0, UArg a1)
       }
     }
 
-    if (events & SBP_PERIODIC_EVT)
-    {
-      events &= ~SBP_PERIODIC_EVT;
-
-      Util_startClock(&periodicClock);
-
-      // Perform periodic application task
-      SimpleBLEPeripheral_performPeriodicTask();
-    }
+//    if (events & SBP_PERIODIC_EVT)
+//    {
+//      events &= ~SBP_PERIODIC_EVT;
+//
+//      Util_startClock(&periodicClock);
+//
+//      // Perform periodic application task
+//      SimpleBLEPeripheral_performPeriodicTask();
+//    }
 
 #ifdef FEATURE_OAD
     while (!Queue_empty(hOadQ))
