@@ -1,4 +1,4 @@
-# Biosense simple_peripheral_app
+# BioSense simple_peripheral_app
 
 This is a modified version of TI's base simple_peripheral_app
 
