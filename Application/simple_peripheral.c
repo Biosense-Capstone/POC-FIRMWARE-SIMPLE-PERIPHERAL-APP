@@ -616,7 +616,7 @@ static void SimpleBLEPeripheral_taskFxn(UArg a0, UArg a1)
           }
           if(GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData),
                                scanRspData) != SUCCESS){
-              --index_var;
+              //--index_var;
           }
 
       }
